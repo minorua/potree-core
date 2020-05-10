@@ -1995,6 +1995,8 @@
 			};
 
 			xhr.send(null);
+
+			console.log("Loading " + url);
 		};
 
 		parse(node, buffer)
@@ -3972,18 +3974,24 @@ uniform float uOrthoHeight;
 uniform int clipTask;
 uniform int clipMethod;
 
-#if defined(num_clipboxes) && num_clipboxes > 0
+#if defined(num_clipboxes)
+#if num_clipboxes > 0
 	uniform mat4 clipBoxes[num_clipboxes];
 #endif
-
-#if defined(num_clipspheres) && num_clipspheres > 0
-	uniform mat4 uClipSpheres[num_clipspheres];
 #endif
 
-#if defined(num_clippolygons) && num_clippolygons > 0
+#if defined(num_clipspheres)
+#if num_clipspheres > 0
+	uniform mat4 uClipSpheres[num_clipspheres];
+#endif
+#endif
+
+#if defined(num_clippolygons)
+#if num_clippolygons > 0
 	uniform int uClipPolygonVCount[num_clippolygons];
 	uniform vec3 uClipPolygonVertices[num_clippolygons * 8];
 	uniform mat4 uClipPolygonWVP[num_clippolygons];
+#endif
 #endif
 
 uniform float size;
@@ -4024,10 +4032,12 @@ uniform sampler2D visibleNodes;
 uniform sampler2D gradient;
 uniform sampler2D classificationLUT;
 
-#if defined(num_shadowmaps) && num_shadowmaps > 0
+#if defined(num_shadowmaps)
+#if num_shadowmaps > 0
 	uniform sampler2D uShadowMap[num_shadowmaps];
 	uniform mat4 uShadowWorldView[num_shadowmaps];
 	uniform mat4 uShadowProj[num_shadowmaps];
+#endif
 #endif
 
 varying vec3 vColor;
@@ -4045,7 +4055,8 @@ float round(float number)
 //OCTREE
 //---------------------
 
-#if (defined(adaptive_point_size) || defined(color_type_lod)) && defined(tree_type_octree)
+#if (defined(adaptive_point_size) || defined(color_type_lod))
+#if defined(tree_type_octree)
 
 	/**
 	 * number of 1-bits up to inclusive index position
@@ -4223,11 +4234,13 @@ float round(float number)
 		return pow(2.0, getLOD());
 	}
 #endif
+#endif
 
 //---------------------
 //KD-TREE
 //---------------------
-#if (defined(adaptive_point_size) || defined(color_type_lod)) && defined(tree_type_kdtree)
+#if (defined(adaptive_point_size) || defined(color_type_lod))
+#if defined(tree_type_kdtree)
 	float getLOD()
 	{
 		vec3 offset = vec3(0.0, 0.0, 0.0);
@@ -4301,6 +4314,7 @@ float round(float number)
 	{
 		return 0.5 * pow(1.3, getLOD());
 	}
+#endif
 #endif
 
 //formula adapted from: http://www.dfstudios.co.uk/articles/programming/image-programming-algorithms/image-processing-algorithms-part-5-contrast-adjustment/
@@ -4503,7 +4517,8 @@ float getPointSize()
 	return pointSize;
 }
 
-#if defined num_clippolygons && num_clippolygons > 0
+#if defined num_clippolygons
+#if num_clippolygons > 0
 	bool pointInClipPolygon(vec3 point, int polyIdx)
 	{
 		mat4 wvp = uClipPolygonWVP[polyIdx];
@@ -4534,6 +4549,7 @@ float getPointSize()
 		return c;
 	}
 #endif
+#endif
 
 void doClipping()
 {
@@ -4550,7 +4566,8 @@ void doClipping()
 	int clipVolumesCount = 0;
 	int insideCount = 0;
 
-	#if defined(num_clipboxes) && num_clipboxes > 0
+	#if defined(num_clipboxes)
+	#if num_clipboxes > 0
 		for(int i = 0; i < num_clipboxes; i++)
 		{
 			vec4 clipPosition = clipBoxes[i] * modelMatrix * vec4( position, 1.0 );
@@ -4562,8 +4579,10 @@ void doClipping()
 			clipVolumesCount++;
 		}	
 	#endif
+	#endif
 
-	#if defined(num_clippolygons) && num_clippolygons > 0
+	#if defined(num_clippolygons)
+	#if num_clippolygons > 0
 		for(int i = 0; i < num_clippolygons; i++)
 		{
 			bool inside = pointInClipPolygon(position, i);
@@ -4571,6 +4590,7 @@ void doClipping()
 			insideCount = insideCount + (inside ? 1 : 0);
 			clipVolumesCount++;
 		}
+	#endif
 	#endif
 
 	bool insideAny = insideCount > 0;
@@ -4638,7 +4658,8 @@ void main()
 	//CLIPPING
 	doClipping();
 
-	#if defined num_clipspheres && num_clipspheres > 0
+	#if defined num_clipspheres
+	#if num_clipspheres > 0
 		for(int i = 0; i < num_clipspheres; i++)
 		{
 			vec4 sphereLocal = uClipSpheres[i] * mvPosition;
@@ -4654,8 +4675,10 @@ void main()
 			}
 		}
 	#endif
+	#endif
 
-	#if defined num_shadowmaps && num_shadowmaps > 0
+	#if defined num_shadowmaps
+	#if num_shadowmaps > 0
 
 		const float sm_near = 0.1;
 		const float sm_far = 10000.0;
@@ -4716,6 +4739,7 @@ void main()
 			}
 		}
 
+	#endif
 	#endif
 }`;
 
@@ -9417,9 +9441,7 @@ void main()
 	{
 		constructor()
 		{
-			super(new THREE.Geometry(), new THREE.MeshBasicMaterial({opacity:0.0, wireframe:false, transparent:true}));
-
-			this.rotation.set(-Math.PI / 2, 0, 0);
+			super(new THREE.Geometry(), new THREE.MeshBasicMaterial({opacity:0.0, wireframe:false, alphaTest:1}));
 
 			this.frustumCulled = true;
 			this.pointclouds = [];
@@ -9470,9 +9492,9 @@ void main()
 			var center = box.getCenter(new THREE.Vector3());
 
 			var matrix = new THREE.Matrix4();
-			matrix.makeTranslation(center.x, -center.z, center.y);
+			matrix.makeTranslation(center.x, center.y, center.z);
 
-			var geometry = new THREE.BoxBufferGeometry(size.x, size.z, size.y);
+			var geometry = new THREE.BoxBufferGeometry(size.x, size.y, size.z);
 			geometry.applyMatrix(matrix);
 
 			this.geometry = geometry;
