@@ -17,7 +17,7 @@ class BasicGroup extends THREE.Mesh
 {
 	constructor()
 	{
-		super(new THREE.Geometry(), new THREE.MeshBasicMaterial({opacity:0.0, wireframe:false, transparent:true}));
+		super(new THREE.Geometry(), new THREE.MeshBasicMaterial({opacity:0.0, wireframe:false, alphaTest:1}));
 
 		this.frustumCulled = true;
 		this.pointclouds = [];
