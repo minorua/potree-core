@@ -5005,11 +5005,11 @@ class PointCloudMaterial extends THREE.RawShaderMaterial
 		}
 		else if(this.opacity < 1.0 && !this.useEDL)
 		{
-			this.blending = THREE.AdditiveBlending;
+			this.blending = THREE.NormalBlending;
 			this.transparent = true;
-			this.depthTest = false;
+			this.depthTest = true;
 			this.depthWrite = true;
-			this.depthFunc = THREE.AlwaysDepth;
+			this.depthFunc = THREE.LessEqualDepth;
 		}
 
 		if(this.weighted)
