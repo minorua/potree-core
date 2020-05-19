@@ -11,7 +11,7 @@
 		"dev": "http-server .",
 		"build": "rollup -c && npm run closure",
 		"docs": "jsdoc -d docs source",
-		"closure": "java -jar node_modules/google-closure-compiler-java/compiler.jar --compilation_level SIMPLE --warning_level QUIET --formatting SINGLE_QUOTES --language_in ECMASCRIPT_2017 --language_out ECMASCRIPT5 --js build/potree.js --js_output_file build/potree.min.js",
+		"closure": "java -jar node_modules/google-closure-compiler-java/compiler.jar --compilation_level SIMPLE --warning_level QUIET --formatting SINGLE_QUOTES --language_in ECMASCRIPT_2017 --language_out ECMASCRIPT_2015 --js build/potree.js --js_output_file build/potree.min.js",
 		"pub": "npm run build && npm publish --access public ."
 	},
 	"keywords": [
