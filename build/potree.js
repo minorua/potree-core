@@ -1995,8 +1995,6 @@
 			};
 
 			xhr.send(null);
-
-			console.log("Loading " + url);
 		};
 
 		parse(node, buffer)
