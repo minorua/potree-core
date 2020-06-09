@@ -297,7 +297,7 @@ function getBasePath()
 	}
 	else
 	{
-		console.error("Potree: Was unable to find its script path using document.currentScript.");
+		console.warn("Potree: Was unable to find its script path using document.currentScript.");
 	}
 
 	return "";
@@ -3160,7 +3160,7 @@ class EptBinaryLoader
 		{
 			if(xhr.readyState === 4)
 			{
-				if(xhr.status === 200)
+				if(xhr.status === 200 || xhr.status === 0)
 				{
 					var buffer = xhr.response;
 					this.parse(node, buffer);
@@ -3280,7 +3280,7 @@ class EptLaszipLoader
 		{
 			if(xhr.readyState === 4)
 			{
-				if(xhr.status === 200)
+				if(xhr.status === 200 || xhr.status === 0)
 				{
 					var buffer = xhr.response;
 					this.parse(node, buffer);
@@ -7995,7 +7995,7 @@ class PointCloudArena4DGeometry extends THREE.EventDispatcher
 		{
 			try
 			{
-				if(xhr.readyState === 4 && xhr.status === 200)
+				if(xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0))
 				{
 					var response = JSON.parse(xhr.responseText);
 
@@ -8056,7 +8056,7 @@ class PointCloudArena4DGeometry extends THREE.EventDispatcher
 
 		xhr.onreadystatechange = () =>
 		{
-			if(!(xhr.readyState === 4 && xhr.status === 200))
+			if(!(xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0)))
 			{
 				return;
 			}

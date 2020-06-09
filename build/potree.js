@@ -303,7 +303,7 @@
 		}
 		else
 		{
-			console.error("Potree: Was unable to find its script path using document.currentScript.");
+			console.warn("Potree: Was unable to find its script path using document.currentScript.");
 		}
 
 		return "";
@@ -3166,7 +3166,7 @@
 			{
 				if(xhr.readyState === 4)
 				{
-					if(xhr.status === 200)
+					if(xhr.status === 200 || xhr.status === 0)
 					{
 						var buffer = xhr.response;
 						this.parse(node, buffer);
@@ -3286,7 +3286,7 @@
 			{
 				if(xhr.readyState === 4)
 				{
-					if(xhr.status === 200)
+					if(xhr.status === 200 || xhr.status === 0)
 					{
 						var buffer = xhr.response;
 						this.parse(node, buffer);
@@ -8001,7 +8001,7 @@ void main()
 			{
 				try
 				{
-					if(xhr.readyState === 4 && xhr.status === 200)
+					if(xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0))
 					{
 						var response = JSON.parse(xhr.responseText);
 
@@ -8062,7 +8062,7 @@ void main()
 
 			xhr.onreadystatechange = () =>
 			{
-				if(!(xhr.readyState === 4 && xhr.status === 200))
+				if(!(xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0)))
 				{
 					return;
 				}
