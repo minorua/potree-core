@@ -31,7 +31,7 @@ class EptLaszipLoader
 		{
 			if(xhr.readyState === 4)
 			{
-				if(xhr.status === 200)
+				if(xhr.status === 200 || xhr.status === 0)
 				{
 					var buffer = xhr.response;
 					this.parse(node, buffer);

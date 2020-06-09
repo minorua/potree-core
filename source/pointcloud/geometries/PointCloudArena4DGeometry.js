@@ -236,7 +236,7 @@ class PointCloudArena4DGeometry extends THREE.EventDispatcher
 		{
 			try
 			{
-				if(xhr.readyState === 4 && xhr.status === 200)
+				if(xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0))
 				{
 					var response = JSON.parse(xhr.responseText);
 
@@ -297,7 +297,7 @@ class PointCloudArena4DGeometry extends THREE.EventDispatcher
 
 		xhr.onreadystatechange = () =>
 		{
-			if(!(xhr.readyState === 4 && xhr.status === 200))
+			if(!(xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0)))
 			{
 				return;
 			}
