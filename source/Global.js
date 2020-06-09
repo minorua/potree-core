@@ -18,7 +18,7 @@ function getBasePath()
 	}
 	else
 	{
-		console.error("Potree: Was unable to find its script path using document.currentScript.");
+		console.warn("Potree: Was unable to find its script path using document.currentScript.");
 	}
 
 	return "";
