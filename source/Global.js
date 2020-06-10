@@ -16,9 +16,9 @@ function getBasePath()
 
 		return scriptPath;
 	}
-	else
+	else if (typeof Q3D === "undefined" || Q3D.Config.potreeBasePath === undefined)
 	{
-		console.warn("Potree: Was unable to find its script path using document.currentScript.");
+		console.error("Potree: Was unable to find its script path using document.currentScript.");
 	}
 
 	return "";
