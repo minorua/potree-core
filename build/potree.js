@@ -301,9 +301,9 @@
 
 			return scriptPath;
 		}
-		else
+		else if (typeof Q3D === "undefined" || Q3D.Config.potreeBasePath === undefined)
 		{
-			console.warn("Potree: Was unable to find its script path using document.currentScript.");
+			console.error("Potree: Was unable to find its script path using document.currentScript.");
 		}
 
 		return "";
@@ -8001,7 +8001,7 @@ void main()
 			{
 				try
 				{
-					if(xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0))
+					if(xhr.readyState === 4 && xhr.status === 200)
 					{
 						var response = JSON.parse(xhr.responseText);
 
@@ -8062,7 +8062,7 @@ void main()
 
 			xhr.onreadystatechange = () =>
 			{
-				if(!(xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0)))
+				if(!(xhr.readyState === 4 && xhr.status === 200))
 				{
 					return;
 				}
